@@ -8,7 +8,7 @@ class Player {
         this.maxdmgval = 0.2;
         this.spatkop = 0;
         this.defop = 0;
-        this.runop = 74;
+        this.runop = 73;
         this.heal = 0;
     }
 
@@ -27,8 +27,8 @@ class Player {
 
     spdefran() {
         // 매턴 시작마다 특수공격, 방어 확률을 난수돌림
-        this.spatkop = Math.round(Math.random() * 66) + 11;
-        this.defop = Math.round(Math.random() * 77) + 11;
+        this.spatkop = Math.round(Math.random() * 70) + 10;
+        this.defop = Math.round(Math.random() * 75) + 15;
     }
 
     spatk() {
@@ -68,39 +68,39 @@ class Player {
         }
     }
 
-    hpheal() {
-        this.heal = Math.round(Math.random() * 67 + 44)
+    hpheal(stage) {
+        this.heal = Math.round(Math.random() * stage*10 + 30 + (stage-1)*5)
         this.hp += this.heal;
         console.log(chalk.green(`HP +${this.heal}`));
     }
 
-    s_heal() {
-        this.heal = Math.round(Math.random() * 18 + 15)
+    s_heal(stage) {
+        this.heal = Math.round(Math.random() * stage *2 + 3 + (stage-1)*2)
         this.hp += this.heal;
         // console.log(chalk.green(`HP +${heal}`));
     }
 
-    powerup() {
+    powerup(stage) {
         //랜덤으로 공격력or 최대 공격배율 증가
         let tmpatk;
         let tmpmaxdmgval;
         switch (Math.round(Math.random() * 2 + 1)) {
             case 1:
-                tmpatk = Math.round(Math.random() * 5) + 4;
+                tmpatk = Math.round(Math.random() * 1 *stage + 2 + (stage-1)*1);
                 this.atk += tmpatk;
                 console.log(chalk.green(`공격력 +${tmpatk}`));
                 console.log(chalk.green(`최대 공격력 ${this.maxdmg()}`));
                 break;
             case 2:
-                tmpmaxdmgval = (Math.round(Math.random() * 60) + 20) / 100;
+                tmpmaxdmgval = (Math.round(Math.random() * 6 * stage + 30 + (stage-1)*4)) / 100;
                 this.maxdmgval += tmpmaxdmgval;
                 console.log(chalk.green(`공격력 배율 +${tmpmaxdmgval}`));
                 console.log(chalk.green(`최대 공격력 ${this.maxdmg()}`));
                 break;
             case 3:
-                tmpatk = Math.round(Math.random() * 3) + 2;
+                tmpatk = Math.round(Math.random() * 0.5 *stage + 1 + (stage-1)*0.5);
                 this.atk += tmpatk;
-                tmpmaxdmgval = (Math.round(Math.random() * 30) + 10) / 100;
+                tmpmaxdmgval = (Math.round(Math.random() * 3 * stage + 15 + (stage-1)*2)) / 100;
                 this.maxdmgval += tmpmaxdmgval;
                 console.log(chalk.green(`공격력 +${tmpatk}`));
                 console.log(chalk.green(`공격력 배율 +${tmpmaxdmgval}`));
@@ -110,32 +110,37 @@ class Player {
         }
     }
 
-    hpheal_run() {
-        this.heal = Math.round(Math.random() * 40 + 22);
+    hpheal_run(stage) {
+        // this.heal = Math.round(Math.random() * 40 + 22);
+        this.heal = Math.round(Math.random() * stage*5 + 15 + Math.round((stage-1)*1.5))
         this.hp += this.heal;
         console.log(chalk.green(`HP +${this.heal}`));
     }
 
-    powerup_run() {
+    powerup_run(stage) {
         let tmpatk;
         let tmpmaxdmgval;
         switch (Math.round(Math.random() * 2 + 1)) {
             case 1:
-                tmpatk = Math.round(Math.random() * 2) + 2;
+                // tmpatk = Math.round(Math.random() * 2) + 2;
+                tmpatk = Math.round(Math.random() * 0.5 *stage + 1 + (stage-1)*0.5);
                 this.atk += tmpatk;
                 console.log(chalk.green(`공격력 +${tmpatk}`));
                 console.log(chalk.green(`최대 공격력 ${this.maxdmg()}`));
                 break;
             case 2:
-                tmpmaxdmgval = (Math.round(Math.random() * 23) + 10) / 100;
+                // tmpmaxdmgval = (Math.round(Math.random() * 23) + 10) / 100;
+                tmpmaxdmgval = (Math.round(Math.random() * 3 * stage + 5 + (stage-1)*2)) / 100;
                 this.maxdmgval += tmpmaxdmgval;
                 console.log(chalk.green(`공격력 배율 +${tmpmaxdmgval}`));
                 console.log(chalk.green(`최대 공격력 ${this.maxdmg()}`));
                 break;
             case 3:
-                tmpatk = Math.round(Math.random() * 1) + 1;
+                // tmpatk = Math.round(Math.random() * 1) + 1;
+                tmpatk = Math.round(Math.random() * 0.25 *stage + 0.5 + (stage-1)*0.25);
                 this.atk += tmpatk;
-                tmpmaxdmgval = (Math.round(Math.random() * 11) + 5) / 100;
+                // tmpmaxdmgval = (Math.round(Math.random() * 11) + 5) / 100;
+                tmpmaxdmgval = (Math.round(Math.random() * 1.5 * stage + 7.5 + (stage-1)*1)) / 100;
                 this.maxdmgval += tmpmaxdmgval;
                 console.log(chalk.green(`공격력 +${tmpatk}`));
                 console.log(chalk.green(`공격력 배율 +${tmpmaxdmgval}`));
@@ -153,20 +158,20 @@ class Monster {
         this.maxdmgval = 0.2
         if (stage <= 5) {
             for (let i = 0; i < stage; i++) {
-                this.hp += Math.round(Math.random() * 13 + 20);
+                this.hp += Math.round(Math.random() * 10 + 18);
                 this.atk += Math.round(Math.random() * 1 + 2);
-                this.maxdmgval += Math.round(Math.random() * 2 + 3) / 100;
+                this.maxdmgval += Math.round(Math.random() * 2 + 2) / 100;
             }
         } else if (stage <= 8) {
             for (let i = 0; i < stage; i++) {
-                this.hp += Math.round(Math.random() * 17 + 24);
+                this.hp += Math.round(Math.random() * 15 + 23);
                 this.atk += Math.round(Math.random() * 2 + 2);
                 this.maxdmgval += Math.round(Math.random() * 3 + 3) / 100;
             }
         }
         else {
             for (let i = 0; i < stage; i++) {
-                this.hp += Math.round(Math.random() * 22 + 33);
+                this.hp += Math.round(Math.random() * 21 + 30);
                 this.atk += Math.round(Math.random() * 2 + 3);
                 this.maxdmgval += Math.round(Math.random() * 3 + 4) / 100;
             }
@@ -220,7 +225,7 @@ const battle = async (stage, player, monster) => {
     let logs = [];
     let runtf = false;
 
-    player.runop -= 4;
+    player.runop -= 3;
     if (player.runop <= 10) player.runop = 10;
 
     function log_refill() {
@@ -304,7 +309,7 @@ const battle = async (stage, player, monster) => {
                     logs.push(chalk.green(`방어에 성공했다! 소량의 체력 회복!`));
                     log_refill();
                     await delay(1);
-                    player.s_heal(); //소랑 회복
+                    player.s_heal(stage); //소랑 회복
                     logs.push(chalk.green(`HP +${player.heal}`));
                     log_refill();
                     await delay(1);
@@ -347,9 +352,9 @@ const battle = async (stage, player, monster) => {
             if (stage < 10) {
                 console.log(chalk.green(`보상을 획득합니다.`));
                 await delay(1);
-                player.hpheal();
+                player.hpheal(stage);
                 await delay(1);
-                player.powerup();
+                player.powerup(stage);
                 await delay(4);
                 break;
             } else {
@@ -370,9 +375,9 @@ const battle = async (stage, player, monster) => {
             } else {
                 console.log(chalk.green(`보상을 일부 획득합니다.`));
                 await delay(1);
-                player.hpheal_run();
+                player.hpheal_run(stage);
                 await delay(1);
-                player.powerup_run();
+                player.powerup_run(stage);
                 await delay(4);
             }
             break;
