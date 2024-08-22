@@ -18,7 +18,7 @@ class Player {
 
     attack() {
         // 플레이어의 공격력 범위 내에서 Math.random()을 이용해 나온 값으로 Monster의 hp를 감소시킨다
-        // 여기서 monster 속성에 직접 적용? 복잡할듯?
+        // 여기서 monster 속성에 직접 적용하고 로그 띄우기? 복잡할듯?
         // 일단은 데미지만 계산해야겟다
         let dmg = Math.round(Math.random() * (this.atk * this.maxdmgval) + this.atk);
         //console.log(dmg);
@@ -112,7 +112,8 @@ class Player {
 
     hpheal_run(stage) {
         // this.heal = Math.round(Math.random() * 40 + 22);
-        this.heal = Math.round(Math.random() * stage*5 + 15 + Math.round((stage-1)*1.5))
+        // this.heal = Math.round(Math.random() * stage*5 + 15 + Math.round((stage-1)*1.5))
+        this.heal = Math.round(Math.random() * stage*8 + 24 + (stage-1)*4)
         this.hp += this.heal;
         console.log(chalk.green(`HP +${this.heal}`));
     }
