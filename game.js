@@ -112,7 +112,8 @@ class Player {
 
     hpheal_run(stage) {
         // this.heal = Math.round(Math.random() * 40 + 22);
-        this.heal = Math.round(Math.random() * stage*5 + 15 + Math.round((stage-1)*1.5))
+        // this.heal = Math.round(Math.random() * stage*5 + 15 + Math.round((stage-1)*1.5))
+        this.heal = Math.round(Math.random() * stage*8 + 24 + (stage-1)*4)
         this.hp += this.heal;
         console.log(chalk.green(`HP +${this.heal}`));
     }
