@@ -1,26 +1,58 @@
 import chalk from 'chalk';
 import figlet from 'figlet';
 import readlineSync from 'readline-sync';
-import {startGame} from "./game.js";
+import { startGame } from "./game.js";
+
+function delay(sec) {
+    return new Promise(resolve => setTimeout(resolve, sec * 500));
+}
 
 // 로비 화면을 출력하는 함수
-function displayLobby() {
-    console.clear();
+async function displayLobby() {
+    // 상단 경계선
+    let renum = 80;
+    const line = chalk.magentaBright('='.repeat(renum));
+
+    let text = "";
+    let extext = "LUK test Dungeon";
+    for (let i = 0; i < renum; i++){
+        console.clear();
+        text += "="
+        console.log(chalk.magentaBright(text));
+        await delay(0.02);
+    }
+
+    text = "";
+    for (let i = 0; i < extext.length; i++) {
+        // 타이틀 텍스트
+        console.clear();
+        console.log(line);
+        text = extext.slice(extext.length-i-1, extext.length);
+        console.log(
+            chalk.cyan(
+                figlet.textSync(text, {
+                    font: 'Standard',
+                    horizontalLayout: 'default',
+                    verticalLayout: 'default'
+                })
+            )
+        );
+        await delay(0.5);
+    }
+
+    // console.clear();
 
     // 타이틀 텍스트
-    console.log(
-        chalk.cyan(
-            figlet.textSync('RL- Javascript', {
-                font: 'Standard',
-                horizontalLayout: 'default',
-                verticalLayout: 'default'
-            })
-        )
-    );
+    // console.log(
+    //     chalk.cyan(
+    //         figlet.textSync('RL- Javascript', {
+    //             font: 'Standard',
+    //             horizontalLayout: 'default',
+    //             verticalLayout: 'default'
+    //         })
+    //     )
+    // );
 
-    // 상단 경계선
-    const line = chalk.magentaBright('='.repeat(50));
-    console.log(line);
 
     // 게임 이름
     console.log(chalk.yellowBright.bold('CLI 게임에 오신것을 환영합니다!'));
@@ -74,8 +106,8 @@ function handleUserInput() {
 }
 
 // 게임 시작 함수
-function start() {
-    displayLobby();
+async function start() {
+    await displayLobby();
     handleUserInput();
 }
 
