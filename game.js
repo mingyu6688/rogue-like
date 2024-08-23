@@ -27,7 +27,7 @@ class Player {
 
     spdefran() {
         // 매턴 시작마다 특수공격, 방어 확률을 난수돌림
-        this.spatkop = Math.round(Math.random() * 70) + 10;
+        this.spatkop = Math.round(Math.random() * 70) + 15;
         this.defop = Math.round(Math.random() * 75) + 15;
     }
 
