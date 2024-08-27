@@ -222,7 +222,7 @@ function displayStatus(stage, player, monster) {
     console.log(chalk.magentaBright(`=====================\n`));
 }
 
-const battle = async (stage, player, monster) => {
+const battle = async function(stage, player, monster) {
     let logs = [];
     let runtf = false;
 
@@ -235,21 +235,124 @@ const battle = async (stage, player, monster) => {
         logs.forEach((log) => console.log(log));
     }
 
-    function p_atk_mon() {
-        let dmg = player.attack();
-        monster.hp = monster.hp - dmg;
-        if (monster.hp <= 0) monster.hp = 0;
-        logs.push(chalk.green(`몬스터에게 ${dmg}의 피해를 입혔습니다.`));
-        log_refill();
+    async function atk(){
+        atkdmg(player, monster, true);
+        // p_atk_mon();
+        await delay(1);
+        if (monster.hp >= 1) {
+            atkdmg(player, monster, false);
+            // mon_atk_p();
+            await delay(1);
+        }
     }
 
-    function mon_atk_p() {
-        let dmg = monster.attack();
-        player.hp = player.hp - dmg;
-        if (player.hp <= 0) player.hp = 0;
-        logs.push(chalk.red(`몬스터가 ${dmg}의 피해를 입혔습니다.`));
-        log_refill();
+    async function spatk(){
+        if (player.spatk() === true) {
+            //성공시 공격2번 계산
+            logs.push(chalk.green(`연속 공격!`));
+            console.log(chalk.green(`연속 공격!`))
+            // log_refill();
+            await delay(1);
+
+            atkdmg(player, monster, true);
+            // p_atk_mon();
+            await delay(1);
+
+            atkdmg(player, monster, true);
+            // p_atk_mon();
+            await delay(1);
+        } else {
+            logs.push(chalk.green(`연속 공격 실패!`));
+            console.log(chalk.green(`연속 공격 실패!`))
+            // log_refill();
+            await delay(1);
+        }
+
+        if (monster.hp >= 1) {
+            atkdmg(player, monster, false);
+            // mon_atk_p();
+            await delay(1);
+        }
     }
+
+    async function def(){
+        if (player.def() === true) {
+            //성공시 피해없음 + hp 소량 회복
+            logs.push(chalk.green(`방어에 성공했다! 소량의 체력 회복!`));
+            console.log(chalk.green(`방어에 성공했다! 소량의 체력 회복!`));
+            // log_refill();
+            await delay(1);
+            player.s_heal(stage); //소랑 회복
+            logs.push(chalk.green(`HP +${player.heal}`));
+            console.log(chalk.green(`HP +${player.heal}`));
+            // log_refill();
+            await delay(1);
+
+
+        } else {
+            logs.push(chalk.green(`방어에 실패했다!`));
+            console.log(chalk.green(`방어에 실패했다!`))
+            // log_refill();
+            await delay(1);
+
+            atkdmg(player, monster, false);
+            // mon_atk_p();
+            await delay(1);
+        }
+    }
+
+    async function run(){
+        logs.push(chalk.green(`도망가기를 시전했다!`));
+        console.log(chalk.green(`도망가기를 시전했다!`))
+        // log_refill();
+        await delay(1);
+        if (player.run() === true) {
+            runtf = true; // 다음 스테이지로 넘어가기 위한 변수
+        } else {
+            logs.push(chalk.green(`도망에 실패했다!`));
+            console.log(chalk.green(`도망가기를 실패했다!`))
+            // log_refill();
+            await delay(1);
+
+            atkdmg(player, monster, false);
+            // mon_atk_p();
+            await delay(1);
+        }
+    }
+
+    function atkdmg(player, monster, attacker) {
+        if (attacker === true){
+            let dmg = player.attack();
+            monster.hp = monster.hp - dmg;
+            if (monster.hp <= 0) monster.hp = 0;
+            logs.push(chalk.green(`몬스터에게 ${dmg}의 피해를 입혔습니다.`));
+            console.log(chalk.green(`몬스터에게 ${dmg}의 피해를 입혔습니다.`));
+            // log_refill();
+        } else{
+            let dmg = monster.attack();
+            player.hp = player.hp - dmg;
+            if (player.hp <= 0) player.hp = 0;
+            logs.push(chalk.red(`몬스터가 ${dmg}의 피해를 입혔습니다.`));
+            console.log(chalk.red(`몬스터가 ${dmg}의 피해를 입혔습니다.`));
+            // log_refill();
+        }
+    }
+
+    // function p_atk_mon() {
+    //     let dmg = player.attack();
+    //     monster.hp = monster.hp - dmg;
+    //     if (monster.hp <= 0) monster.hp = 0;
+    //     logs.push(chalk.green(`몬스터에게 ${dmg}의 피해를 입혔습니다.`));
+    //     log_refill();
+    // }
+
+    // function mon_atk_p() {
+    //     let dmg = monster.attack();
+    //     player.hp = player.hp - dmg;
+    //     if (player.hp <= 0) player.hp = 0;
+    //     logs.push(chalk.red(`몬스터가 ${dmg}의 피해를 입혔습니다.`));
+    //     log_refill();
+    // }
 
     while (player.hp > 0) {
         // console.clear();
@@ -272,74 +375,19 @@ const battle = async (stage, player, monster) => {
 
         switch (choice) {
             case '1':
-                p_atk_mon();
-                await delay(1);
-                if (monster.hp >= 1) {
-                    mon_atk_p();
-                    await delay(1);
-                }
+                await atk();
                 break;
             case '2':
                 //연속공격
-                if (player.spatk() === true) {
-                    //성공시 공격2번 계산
-                    logs.push(chalk.green(`연속 공격!`));
-                    log_refill();
-                    await delay(1);
-
-                    p_atk_mon();
-                    await delay(1);
-
-                    p_atk_mon();
-                    await delay(1);
-                } else {
-                    logs.push(chalk.green(`연속 공격 실패!`));
-                    log_refill();
-                    await delay(1);
-                }
-
-                if (monster.hp >= 1) {
-                    mon_atk_p();
-                    await delay(1);
-                }
+                await spatk();
                 break;
             case '3':
                 // 방어
-                if (player.def() === true) {
-                    //성공시 피해없음 + hp 소량 회복
-                    logs.push(chalk.green(`방어에 성공했다! 소량의 체력 회복!`));
-                    log_refill();
-                    await delay(1);
-                    player.s_heal(stage); //소랑 회복
-                    logs.push(chalk.green(`HP +${player.heal}`));
-                    log_refill();
-                    await delay(1);
-
-
-                } else {
-                    logs.push(chalk.green(`방어에 실패했다!`));
-                    log_refill();
-                    await delay(1);
-
-                    mon_atk_p();
-                    await delay(1);
-                }
+                await def();
                 break;
             case '4':
-                // 빤스런            console.clear();
-                logs.push(chalk.green(`도망가기를 시전했다!`));
-                log_refill();
-                await delay(1);
-                if (player.run() === true) {
-                    runtf = true; // 다음 스테이지로 넘어가기 위한 변수
-                } else {
-                    logs.push(chalk.green(`도망에 실패했다!`));
-                    log_refill();
-                    await delay(1);
-
-                    mon_atk_p();
-                    await delay(1);
-                }
+                // 빤스런
+                await run();
                 break;
             default:
                 logs.push(chalk.green(`제대로 된 값을 입력해주시기 바랍니다.`));
@@ -366,7 +414,7 @@ const battle = async (stage, player, monster) => {
         }
 
         if (runtf === true) {
-            log_refill();
+            // log_refill();
             console.log(chalk.green(`도망에 성공했다!`));
             await delay(1);
             if (stage >= 10) {

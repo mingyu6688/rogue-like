@@ -37,7 +37,7 @@ async function displayLobby() {
                 })
             )
         );
-        await delay(0.5);
+        await delay(0.2);
     }
 
     // console.clear();
@@ -75,14 +75,14 @@ async function displayLobby() {
 }
 
 // 유저 입력을 받아 처리하는 함수
-function handleUserInput() {
+async function handleUserInput() {
     const choice = readlineSync.question('입력: ');
 
     switch (choice) {
         case '1':
             console.log(chalk.green('게임을 시작합니다.'));
             // 여기에서 새로운 게임 시작 로직을 구현
-            startGame();
+            await startGame();
             break;
         case '2':
             console.log(chalk.yellow('구현 준비중입니다.. 게임을 시작하세요'));
